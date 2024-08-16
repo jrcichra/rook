@@ -91,6 +91,17 @@ func GetOperatorSetting(context context.Context, clientset kubernetes.Interface,
 	return GetValue(cm.Data, settingName, defaultValue), nil
 }
 
+func IsForceHost(data map[string]string) bool  {
+	val:= GetValue(data, "ROOK_ENFORCE_HOST_NETWORK", "false")
+	ret,err :=  strconv.ParseBool(val)
+	if err != nil {
+		ret = false
+		logger.Infof("Unable to parse value '%v' for 'ROOK_ENFORCE_HOST_NETWORK'", val)
+	}
+
+	return ret
+}
+
 func GetValue(data map[string]string, settingName, defaultValue string) string {
 	settingValue := defaultValue
 	settingSource := "default"
